@@ -1,6 +1,6 @@
 {% extends 'base.html' %} {% block content %}
 {% load crispy_forms_tags %}
-{% load staticfiles %}
+
 
 <div class="container">
   <div class="row">
@@ -24,7 +24,7 @@
 
               <!-- <img src =  "{{ post.pictures.url }}" height = "200", width="200"/> -->
               <!-- img src="your_app/media/{{ image.image.url }}" height="420" -->
-              <img src = "{{ i.url }}" height = "200", width="200"/>
+              <img src = "{{i.picture.url}}" height = "200", width="200" />
 
           {% endfor %}
 

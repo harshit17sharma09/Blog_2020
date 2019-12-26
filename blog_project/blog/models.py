@@ -8,6 +8,7 @@ from photologue.models import Gallery
 from imagekit.models import ImageSpecField
 from imagekit.processors import ResizeToFill 
 from imagekit.models import ProcessedImageField
+from imagekit.processors import ResizeToFit
 
 
 STATUS = (
@@ -42,7 +43,10 @@ class Post(models.Model):
 #code for uploading multiple images
 class PostPicture(models.Model):
      picture =models.ImageField(upload_to="blog_images", blank=True)
-     postid =models.ForeignKey(Post,on_delete=models.CASCADE,related_name='pictures')       
+     post =models.ForeignKey(Post,on_delete=models.CASCADE,related_name = 'pictures')
+
+
+     
 
 
 
@@ -60,6 +64,8 @@ class Comment(models.Model):
 
     def __str__(self):
         return 'Comment {} by {}'.format(self.body, self.name)
+
+
 
 
 
