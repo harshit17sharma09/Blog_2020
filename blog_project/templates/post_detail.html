@@ -1,6 +1,100 @@
 {% extends 'base.html' %} {% block content %}
 {% load crispy_forms_tags %}
+{% load static %}
 
+
+
+
+<style>
+
+
+/* line 1, ../sass/demo.scss */
+html, body {
+    font-family: 'Slabo 27px', serif;
+    padding: 0;
+    margin: 0;
+    background: #ffffff;
+  }
+  
+  /* line 8, ../sass/demo.scss */
+  * {
+    box-sizing: border-box;
+  }
+  
+  /* line 12, ../sass/demo.scss */
+  a {
+    color: #4ab19a;
+  }
+  
+  /* line 16, ../sass/demo.scss */
+  .clear {
+    clear: both;
+    float: none;
+    width: 100%;
+  }
+  
+  /* line 22, ../sass/demo.scss */
+  .container {
+    max-width: 1170px;
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
+    margin-left: auto;
+  }
+  /* line 32, ../sass/demo.scss */
+  .container .gallery a img {
+    float: left;
+    width: 20%;
+    height: auto;
+    border: 2px solid #fff;
+    -webkit-transition: -webkit-transform .15s ease;
+    -moz-transition: -moz-transform .15s ease;
+    -o-transition: -o-transform .15s ease;
+    -ms-transition: -ms-transform .15s ease;
+    transition: transform .15s ease;
+    position: relative;
+  }
+  /* line 46, ../sass/demo.scss */
+  .container .gallery a:hover img {
+    -webkit-transform: scale(1.05);
+    -moz-transform: scale(1.05);
+    -o-transform: scale(1.05);
+    -ms-transform: scale(1.05);
+    transform: scale(1.05);
+    z-index: 5;
+  }
+  /* line 57, ../sass/demo.scss */
+  .container .gallery a.big img {
+    width: 40%;
+  }
+  
+  /* line 65, ../sass/demo.scss */
+  .align-center {
+    text-align: center;
+  }
+
+
+  .gallery {
+
+    margin : 10px 50px;
+}
+
+.gallery img {
+
+
+    transition : 1s;
+    padding : 15px;
+    width : 200px;
+}
+
+.gallery img:hover {
+
+
+    filter : grayscale(100%);
+    transform : scale(1,1);
+}
+</style>
 
 <div class="container">
   <div class="row">
@@ -8,7 +102,30 @@
       <div class="card-body">
         <h1>{% block title %} {{ post.title }} {% endblock title %}</h1>
 
+        
+         
+        
+
+        <a href="https://www.facebook.com/sharer/sharer.php?u={{ request.build_absolute_uri }}">
+          Facebook
+            </a>
+            <a href="https://twitter.com/home?status={{ share_string }}%20{{ request.build_absolute_uri }}">
+            Twitter
+            </a>
+
+            <a href='https://plus.google.com/share?url={{ request.build_absolute_uri }}'>Google+</a>
+            <a href="https://www.linkedin.com/shareArticle?mini=true&url={{ request.build_absolute_uri }}&title={{ post.title }}summary={{ share_string }}&source={{ request.build_absolute_uri }}">
+              Linkedin
+              </a>
+
+
+
+          <p class ="text-muted">Read Time : {% if post.read_time <= 1 %} < 1 Minute {% else %} {{ post.read_time }} minutes  {% endif %}</p> 
         <p class=" text-muted">{{ post.author }} | {{ post.created_on }}</p>
+
+        <div class="fb-like" data-href="https://developers.facebook.com/docs/plugins/" data-width="" data-layout="standard" data-action="like" data-size="small" data-share="true"></div>
+        <hr>
+        
 
         <!-- <div class = "post_image post_item">
           <img class="post_image_img" src = "/media/{{ post.image }}">
@@ -18,23 +135,25 @@
           
       </div>
        
-      <div class>
+      <div class = "gallery">
+        
 
           {% for i in post.pictures.all %}
-
+              
               <!-- <img src =  "{{ post.pictures.url }}" height = "200", width="200"/> -->
               <!-- img src="your_app/media/{{ image.image.url }}" height="420" -->
-              <img src = "{{i.picture.url}}" height = "200", width="200" />
+              <a class = "example-image-link" href="{{i.picture.url}}" data-lightbox = "{{ post.title }}"><img src = "{{i.picture.url}}" height="200" width="200" /> </a>
 
           {% endfor %}
-
+        
 
           </div>
       
-        
+          
 
       
         <p class="card-text ">{{ post.content | safe }}</p>
+          
       </div>
     </div>
     {% block sidebar %} {% include 'sidebar.html' %} {% endblock sidebar %}
@@ -87,5 +206,7 @@
     </div>
   </div>
 </div>
+
+
 
 {% endblock content %}

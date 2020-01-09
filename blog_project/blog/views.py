@@ -1,7 +1,10 @@
+from urllib.parse import quote_plus
 from django.views import generic
 from .models import Post,PostPicture
 from .forms import CommentForm
 from django.shortcuts import render, get_object_or_404
+
+from .utils import get_read_time , count_words
 
 
 class PostList(generic.ListView):
@@ -10,17 +13,32 @@ class PostList(generic.ListView):
     paginate_by = 3
 
 
+    # def post_list(request):
+
+    #     query = request.GET.get("q")
+    #     if query:
+    #         queryset = queryset.filter(title_icontains=query)
+
+    
+
+
+
 # class PostDetail(generic.DetailView):
 #     model = Post
 #     template_name = 'post_detail.html'
 
 def post_detail(request, slug):
+    queryset = Post.objects.filter(status=1).order_by('-created_on')
     template_name = 'post_detail.html'
     post = get_object_or_404(Post, slug=slug)
+    share_string = quote_plus(post.content)
     comments = post.comments.filter(active=True)
     new_comment = None
 
     
+    
+    print(count_words(post.content))
+    print(get_read_time(post.content))
     # Comment posted
     if request.method == 'POST':
         comment_form = CommentForm(data=request.POST)
@@ -38,5 +56,6 @@ def post_detail(request, slug):
     return render(request, template_name, {'post': post,
                                            'comments': comments,
                                            'new_comment': new_comment,
-                                           'comment_form': comment_form }
+                                           'comment_form': comment_form,
+                                           'share_string' : share_string }
     ) 

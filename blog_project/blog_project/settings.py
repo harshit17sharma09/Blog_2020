@@ -46,6 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.sitemaps',
     'imagekit',
     'photo_albums',
+        
     
 ]
 

@@ -2,6 +2,9 @@ from django.db import models
 from django.contrib.auth.models import User
 # Create your models here.
 
+from django.db.models.signals import pre_save
+from django.dispatch import receiver
+
 from photologue.admin import GalleryAdmin as GalleryAdminDefault
 from photologue.models import Gallery
 
@@ -10,6 +13,8 @@ from imagekit.processors import ResizeToFill
 from imagekit.models import ProcessedImageField
 from imagekit.processors import ResizeToFit
 
+
+from .utils import get_read_time
 
 STATUS = (
     (0,"Draft"),
@@ -25,6 +30,8 @@ class Post(models.Model):
     content = models.TextField()
     created_on = models.DateTimeField(auto_now_add=True)
     status = models.IntegerField(choices=STATUS, default=0)
+    # read_time = models.TimeField(null = True , blank = True)
+    read_time = models.IntegerField(default = 0)
     #code for Thumbnail
     # image = models.ImageField(upload_to = "media", default='DEFAULT VALUE')
     image_thumbnail = ProcessedImageField(upload_to = "thumbnail",
@@ -32,7 +39,8 @@ class Post(models.Model):
 
 
     
-
+    def __unicode__(self):
+        return self.title
 
     class Meta:
         ordering = ['-created_on']
@@ -66,6 +74,14 @@ class Comment(models.Model):
         return 'Comment {} by {}'.format(self.body, self.name)
 
 
+def pre_save_post_receiver(sender,instance,*args,**kwargs):
+    
+    if instance.content:
+        content_str = instance.content
+        read_time_var = get_read_time(content_str)
+        instance.read_time = read_time_var
+
+pre_save.connect(pre_save_post_receiver, sender=Post)
 
 
 
